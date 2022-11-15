@@ -1,0 +1,398 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Walmart HVI - System
+schemes:
+  - https
+host: 'DW1CXDEVUS184.homeoffice.wal-mart.com:7443'
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  '/system/v1/activation':
+    get:
+      summary: Gets the current activation information of the HVI system.
+      description: Gets the activation logs of the HVI System and the current activation information.
+      operationId: getActivationInfo
+      tags:
+        - system
+      parameters: []
+      responses:
+        '200':
+          description: The current activation info and activation logs are returned.
+          schema:
+            type: object
+            items:
+             $ref: '#/definitions/HviSystemActivationSummaryDto'
+        '204':
+          description: No data found.
+        '400':
+          description: Bad request.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+        '500':
+          description: Internal server error.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+    post:
+      summary: Activates the HVI system.
+      description: Creates a new activation of the HVI System logging the name of the activator and activation approver.
+      operationId: activate
+      consumes:
+        - "application/json"
+      tags:
+        - system
+      parameters:
+        - in: "body"
+          name : "activationLog"
+          description: "The log of activating the HVI system"
+          required: true
+          schema:
+            type: object
+            required:
+              - activator
+              - approver
+            properties:
+              activator:
+                description: "The name of the user activating the system"
+                type: string
+              approver:
+                description: "The name of the user approving activation of the system"
+                type: string
+      responses:
+        '201':
+          description: Activated
+        '400':
+          description: Bad request.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+        '500':
+          description: Internal server error.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+  '/system/v1/deactivation':   
+    put:
+      summary: Deactivates the HVI system.
+      description: Deactivates the HVI System, updating the activation log.
+      operationId: deactivate
+      consumes:
+        - "application/json"
+      tags:
+        - system
+      parameters:
+        - in: "body"
+          name : "deactivationLog"
+          description: "The log of deactivating the HVI system"
+          required: true
+          schema:
+            type: object
+            required:
+              - activationId
+              - deactivator
+            properties:
+              activationId:
+                description: ID of the current activation to be deactivated.
+                type: string
+              deactivator:
+                description: name of the user who deactivates the system.
+                type: string
+      responses:
+        '200':
+          description: Deactivated
+        '400':
+          description: Bad request.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+        '500':
+          description: Internal server error.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+  '/system/v1/statusandconfig':
+    get:
+      summary: Get a merged output of the status and configuration.
+      description: Returns the current status and the current configuration of the hvi system
+      operationId: getStatusAndConfig
+      tags:
+        - system
+      responses:
+        '200':
+          description: The current status & config of the hvi system.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/HviSystemStatusAndConfigDto'
+        '204':
+          description: No data found.
+        '400':
+          description: Bad request.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+        '500':
+          description: Internal server error.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+  '/system/v1/hasrolesinfo':
+    get:
+      summary: Get an encrypted string.
+      description: Get an encrypted string.
+      operationId: getHasRolesInfo
+      tags:
+        - system
+      responses:
+        '200':
+          description: Get an encrypted string.
+        '204':
+          description: No data found.
+        '400':
+          description: Bad request.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+        '500':
+          description: Internal server error.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+  '/system/v1/getaesencryptedstring':
+    post:
+      summary: Get an encrypted string.
+      description: Get an encrypted string.
+      operationId: getAESEncryptedString
+      consumes:
+        - "application/json"
+      tags:
+        - system
+      parameters:
+        - in: "body"
+          name : "tokenInfo"
+          description: "Token information"
+          required: true
+          schema:
+            type: string
+            required:
+              - tokenInfo
+            properties:
+              tokenInfo:
+                description: "Token information String"
+                type: string
+      responses:
+        '201':
+          description: Activated
+        '400':
+          description: Bad request.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+        '500':
+          description: Internal server error.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+  '/system/v1/status':
+    get:
+      summary: Get the current status of the hvi system.
+      description: Get the current status of the hvi system.
+      operationId: getStatus
+      tags:
+        - system
+      responses:
+        '200':
+          description: The current status of the hvi system.
+          schema:
+            type: object
+            items:
+             $ref: '#/definitions/HviSystemStatusDto'
+        '204':
+          description: No data found.
+        '400':
+          description: Bad request.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+        '500':
+          description: Internal server error.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+  '/system/v1/config':
+    get:
+      summary: Get the current configuration of the hvi system.
+      description: Get the current configuration of the hvi system.
+      operationId: getConfiguration
+      tags:
+        - system
+      responses:
+        '200':
+          description: The current configuration of the hvi system.
+          schema:
+            type: object
+            items:
+             $ref: '#/definitions/HviSystemConfigurationDto'
+        '204':
+          description: No data found.
+        '400':
+          description: Bad request.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+        '500':
+          description: Internal server error.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/ErrorDto'
+definitions:
+  HviSystemActivationSummaryDto:
+    type: object
+    properties:
+      activeStatus:
+        description: Status indicating if system is activated.
+        type: boolean
+      activationId:
+        description: ID of the current activation if the system is activated.
+        type: integer
+        format: int64
+      activatedDate:
+        description: The date on which the system was activated if activeStatus is true.
+        type: string
+        format: date
+      activatedDateTime:
+        description: The date time on which the system was activated if activeStatus is true.
+        type: string
+        format: date-time
+      activatedBy:
+        description: The name of the person who activated the system if activeStatus is true.
+        type: string
+      activationLogs:
+        description: List of system activation log entries
+        type: array
+        items: 
+          $ref: '#/definitions/HviActivateLogEntryDto'
+  HviActivateLogEntryDto:
+    type: object
+    properties:
+        activatedBy:
+          description: The name of the person who activated the system.
+          type: string
+        approvedBy:
+          description: The name of the person who approved activation.
+          type: string
+        deactivatedBy:
+          description: The name of the person who deactivated the system.
+          type: string
+        activatedDateTime:
+          description: The date time of the activation of the system.
+          type: string
+          format: date-time
+        deactivatedDateTime:
+          description: The date time of the deactivation of the system.
+          type: string
+          format: date-time
+  HviSystemStatusAndConfigDto:
+    type: object
+    properties:
+      status:
+        $ref: "#/definitions/HviSystemStatusDto"
+      config:
+        $ref: "#/definitions/HviSystemConfigurationDto"
+  HviSystemStatusDto:
+    type: object
+    properties:
+      systemDate:
+        description: The current date in the system.
+        type: string
+        format: date
+      systemTime:
+        description: The current date time in the system.
+        type: string
+        format: date-time
+      storeManagerWindowStatus:
+        description: Status indicating if a store manager can update current date's store orders.
+        type: boolean
+      dcManagerWindowStatus:
+        description: Status indicating if a DC manager can update current date's pick lists.
+        type: boolean
+      drActiveStatus:
+        description: Status indicating if the process is under DR.
+        type: boolean
+      drActivatedDate:
+        description: The date on which DR was activated if drActiveStatus is true.
+        type: string
+        format: date
+      drActivatedDateTime:
+        description: The date time on which DR was activated if drActiveStatus is true.
+        type: string
+        format: date-time
+      drActivatedReason:
+        description: The reason why DR was activated if drActiveStatus is true.
+        type: string
+      lastDRStartDateTime:
+        description: The date time on which the last DR started if drActiveStatus is false.
+        type: string
+        format: date-time
+      lastDREndDateTime:
+        description: The date time on which the last DR ended if drActiveStatus is false.
+        type: string
+        format: date-time
+  HviSystemConfigurationDto :
+    type: object
+    properties:
+      storeManagerWindowCutOffTime:
+        description: The time at which store manager order approval window ends.
+        type: string
+      dcManagerWindowCutOffTime:
+        description: The time at which DC manager pick list approval window ends.
+        type: string
+      totalLookAheadDaysForStoreOrder:
+       description: The number of days in future for which store orders to be fetched in dashboard.
+       type: integer
+       format: int64
+      totalLookAheadDaysForPickList:
+       description: The number of days in future for which pick lists to be fetched in dashboard.
+       type: integer
+       format: int64
+  ErrorDto:
+    type: object
+    properties:
+      errorId:
+        description: >-
+          Unique id of the error. Can be referred while communicating with
+          support staff.
+        type: string
+      errorNo:
+        description: >-
+          Unique type of the error. Can be referred while communicating with
+          support staff.
+        type: string
+      errorMessage:
+        description: A user understandble message describing the error.
+        type: string
+      errorMessages:
+        items:
+          type: string
+        description: Optional list of errors.
+        type: array
